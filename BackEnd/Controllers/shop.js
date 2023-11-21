@@ -42,9 +42,8 @@ exports.getCart = (req, res, next) => {
 };
 exports.postCart = (req, res, next) => {
     const prodId = req.body.productid;
-    const user = req.user;
     Product.findById(prodId).then(product => {
-        return req.user.addToCart(product, user);
+        return req.user.addToCart(product);
     }).then(result => {
         res.redirect('/cart')
         console.log(result);
@@ -52,11 +51,24 @@ exports.postCart = (req, res, next) => {
 };
 exports.postCartDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId;
-    const user = req.user;
     Product.findById(prodId).then(product => {
-        return req.user.deleteCartProduct(product, user);
+        return req.user.deleteCartProduct(product);
     }).then(result => {
         res.redirect('/cart')
-        console.log(result);
     })
 };
+exports.postOrder = (req, res, next) => {
+    req.user.addOrder().then(result => {
+        res.redirect('/orders')
+    })
+}
+exports.getOrders = (req, res, next) => {
+    req.user.getOrder().then(orders => {
+        res.render(path.join(__dirname, '..', '..', 'Frontend', 'Views', 'shop', 'orders.ejs'), {
+            path: '/orders',
+            pageTitle: 'Your Orders',
+            orders: orders
+
+        })
+    })
+}

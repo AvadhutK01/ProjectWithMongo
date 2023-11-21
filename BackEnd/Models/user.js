@@ -1,6 +1,5 @@
 const getDb = require('../util/database').getDb;
 const mongodb = require('mongodb');
-const Product = require('./product');
 class UserDb {
     constructor(name, email, cart, id) {
         this._id = id
@@ -52,6 +51,25 @@ class UserDb {
         const CartItemsFromUser = this.cart.items.filter((item => { return !item.productId.equals(new mongodb.ObjectId(product._id)) }));
         const db = getDb();
         return db.collection('user').updateOne({ _id: new mongodb.ObjectId(this._id) }, { $set: { cart: { items: CartItemsFromUser } } });
+    }
+    addOrder() {
+        const db = getDb();
+        return this.getCart().then(products => {
+            const order = {
+                items: products,
+                user: {
+                    _id: new mongodb.ObjectId(this._id)
+                }
+            }
+            return db.collection('orders').insertOne(order)
+        }).then(() => {
+            this.cart = { items: [] };
+            return db.collection('user').updateOne({ _id: new mongodb.ObjectId(this._id) }, { $set: { cart: { items: [] } } });
+        });
+    }
+    getOrder() {
+        const db = getDb();
+        return db.collection('orders').find({ 'user._id': new mongodb.ObjectId(this._id) }).toArray();
     }
     static findUserById(userID) {
         const db = getDb();
