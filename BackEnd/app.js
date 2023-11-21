@@ -6,8 +6,10 @@ const shopRoute = require('./Routes/shopRoute');
 const mongoConnect = require('./util/database').mongoConnect;
 require('dotenv').config();
 const app = express();
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '..', 'Frontend', 'Views'));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'Public')));
+app.use(express.static(path.join(__dirname, '..', 'Frontend', 'Public')));
 app.use('/admin', adminRoute);
 app.use(shopRoute);
 mongoConnect(() => {
