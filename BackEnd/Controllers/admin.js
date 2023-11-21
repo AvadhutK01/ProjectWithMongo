@@ -8,7 +8,7 @@ module.exports.postAddProduct = (req, res) => {
     const userId = req.user._id
     const product = new Product(title, price, description, imageUrl, null, userId);
     product.save().then(result => {
-        console.log("Product Created");
+        // console.log("Product Created");
         res.redirect('/admin/products')
     }).catch(err => {
         console.log(err);

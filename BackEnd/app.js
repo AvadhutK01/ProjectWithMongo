@@ -11,7 +11,7 @@ app.set('view engine', 'ejs');
 app.use((req, res, next) => {
     UserDb.findUserById('655cc44e757cb6df54236a77').then(user => {
         if (user) {
-            req.user = user;
+            req.user = new UserDb(user.name, user.email, user.cart, user._id)
         } else {
             req.user = {};
         }
