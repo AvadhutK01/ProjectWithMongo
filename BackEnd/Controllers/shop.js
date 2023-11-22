@@ -1,7 +1,7 @@
 const path = require('path');
 const Product = require('../Models/product');
 exports.getIndex = (req, res, next) => {
-    Product.fetchAll().then(products => {
+    Product.find().then(products => {
         res.render(path.join(__dirname, '..', '..', 'Frontend', 'Views', 'shop', 'index.ejs'), {
             prods: products,
             pageTitle: 'Shop',
@@ -12,7 +12,7 @@ exports.getIndex = (req, res, next) => {
     });
 };
 exports.getProducts = (req, res, next) => {
-    Product.fetchAll().then(products => {
+    Product.find().then(products => {
         res.render(path.join(__dirname, '..', '..', 'Frontend', 'Views', 'shop', 'product-list.ejs'), {
             prods: products,
             pageTitle: 'All Products',
