@@ -5,8 +5,8 @@ module.exports.postAddProduct = (req, res) => {
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
-    // const userId = req.user._id
-    const product = new Product({ title: title, price: price, description: description, imageUrl: imageUrl });
+    const userId = req.user._id
+    const product = new Product({ title: title, price: price, description: description, imageUrl: imageUrl, userId: userId });
     product.save().then(() => {
         res.redirect('/admin/products')
     }).catch(err => {
@@ -21,17 +21,20 @@ module.exports.getAddProduct = (req, res) => {
     });
 }
 exports.getProducts = (req, res, next) => {
-    Product.find().then(
-        (rows) => {
-            res.render(path.join(__dirname, '..', '..', 'Frontend', 'Views', 'admin', 'products.ejs'), {
-                prods: rows,
-                pageTitle: 'Admin Products',
-                path: '/admin/products'
-            });
-        }
-    ).catch(err => {
-        console.log(err);
-    })
+    Product.find()
+        // .populate('userId','name')
+        // .select('title price')
+        .then(
+            (rows) => {
+                res.render(path.join(__dirname, '..', '..', 'Frontend', 'Views', 'admin', 'products.ejs'), {
+                    prods: rows,
+                    pageTitle: 'Admin Products',
+                    path: '/admin/products'
+                });
+            }
+        ).catch(err => {
+            console.log(err);
+        })
 };
 exports.getEditProduct = (req, res, next) => {
     const editMode = req.query.edit;
